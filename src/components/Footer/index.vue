@@ -75,6 +75,7 @@ export default {
         { icon: 'cancel-outline', type: 'close' },
       ],
       audio: this.$config.APlayer,
+      playlistId: 2848639542,
       isMini: true,
     }
   },
@@ -87,8 +88,51 @@ export default {
       this.dressup()
       this.loopTips()
     }
+    this.initMusicList();  
   },
   methods: {
+    /**
+     * Aplayer
+     */
+    /**
+     * 获取播放列表
+     */
+    async getMusicList(url) {
+      try {
+        let result = await (await fetch(url)).json();
+        if (result.code == 200) {
+          const musics = [];
+          for (const music of result.playlist.tracks) {
+            musics.push({
+              name: music.name,
+              artist: music.ar[0].name,
+              cover: music.al.picUrl,
+              url: `https://music.163.com/song/media/outer/url?id=${music.id}.mp3`,
+            });
+          }
+          return musics;
+        }
+      } catch (e) {}
+      return undefined;
+    },
+    async initMusicList() {
+      /** 歌曲API列表 */
+      // 文档参见：https://api.imjad.cn/cloudmusic.md
+      const apis = [
+        `http://www.hjmin.com/playlist/detail?id=${this.playlistId}`,
+        `https://api.imjad.cn/cloudmusic/?type=playlist&id=${this.playlistId}`,
+      ];
+      for (const api of apis) {
+        const result = await this.getMusicList(api);
+        if (result) {
+          return (this.audio = result);
+        }
+        console.log(result);
+      }
+    },
+    /**
+     * 
+     */
     dressup(switchWaifu = false) {
       if (switchWaifu) this.waifu = this.waifu === 'tia' ? 'pio' : 'tia'
       // 获取装扮

@@ -14,8 +14,8 @@ export default {
   /**
    * 站点标题
    */
-  title: '蝉時雨',
-  subtitle: '蝉鸣如雨 花宵道中',
+  title: 'Tomsu',
+  subtitle: '生于尘埃，溺于人海，死于理想高台',
 
   /**
    * Github Issues 配置
